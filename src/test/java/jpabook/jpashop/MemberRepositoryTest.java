@@ -1,6 +1,8 @@
 package jpabook.jpashop;
 
-import org.junit.jupiter.api.Assertions;
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.repository.MemberRepository;
+import jpabook.jpashop.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -17,22 +19,29 @@ class MemberRepositoryTest {
 
 
     @Autowired
-    public MemberRepository memberRepository;
-
-    Member member=new Member();
+    public MemberService memberService;
 
     @Test
     @Transactional
     @Rollback(false)
     public void testMember(){
-        Member member=new Member();
-        member.setUsername("memberA");
+        Member member =new Member();
+        member.setUsername("신현중");
 
-        Long saveId=memberRepository.Save(member);
-        Member findmember=memberRepository.find(saveId);
+        memberService.join(member);
 
-        System.out.println(member.getId());
-        System.out.println(findmember.getId());
+        Member member2 =new Member();
+        member2.setUsername("신현중");
+
+        memberService.join(member2);
+
+        List<Member> memberList=memberService.findMembers();
+
+        for(int i=0;i<2;i++){
+            System.out.println(memberList.get(i).getId());
+            System.out.println(memberList.get(i).getUsername());
+        }
+
 
     }
 
